@@ -1,0 +1,351 @@
+<script>
+  // This code runs immediately, protecting the page from unauthenticated access.
+  if (!localStorage.getItem('userId')) {
+    // Option 1: Simply redirect to login page
+    window.location.href = "login.html";
+    
+    // Option 2 (if you prefer a modal approach):
+    // displayLoginModal();
+  }
+</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BudgetBuddy - Graphs</title>
+    <div class="graph-heading">
+      <h1>Graphs</h1>
+      <p class="tagline">speaks your financial story!!</p>
+    </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+      text-align: center;
+    }
+    .chart-container {
+      width: 90%;
+      max-width: 900px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 { margin-bottom: 20px; }
+    .controls {
+      margin-bottom: 20px;
+    }
+    .controls select,
+    .controls input {
+      padding: 8px;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+/* Set specific sizes for Pie and Donut charts */
+#categoryChart {
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
+}
+
+#donutChart {
+  width: 450px;
+  height: 450px;
+  margin: 0 auto;
+}
+
+ .graph-heading {
+  text-align: center;
+  color: white;
+  padding: 30px 0; /* You can adjust this */
+  background: linear-gradient(to right, #20345c, #4b71bd);
+  animation: fadeInDown 1.2s ease;
+}
+.graph-heading h1 {
+  margin-bottom: 5px; /* This reduces space below 'Graphs' */
+  font-size: 48px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.graph-heading .tagline {
+  margin-top: 0;
+  font-size: 25px;
+  color: #dce6f2;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+    .controls button {
+      padding: 8px 12px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    .controls button:hover {
+      background: #0056b3;
+    }
+    /* New styling for the donut chart alert message */
+    #donutAlert {
+      margin-top: 10px;
+      font-size: 18px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Stacked Bar Chart: Income & Expenses vs Budget -->
+  <div class="chart-container">
+    <h2>Daily Income & Expenses vs Budget</h2>
+    <div class="controls">
+      <label for="viewSelector">View:</label>
+      <select id="viewSelector">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+      <label for="budgetValue">Budget (₹):</label>
+      <input type="number" id="budgetValue" placeholder="e.g. 10000">
+      <button onclick="saveBudget()">Save Budget</button>
+    </div>
+    <canvas id="stackedBarChart"></canvas>
+  </div>
+
+  <!-- Pie Chart: Spending by Category -->
+  <div class="chart-container">
+    <h2>Spending by Category</h2>
+    <canvas id="categoryChart"></canvas>
+  </div>
+
+  <!-- Donut Chart: Budget Usage Meter -->
+  <div class="chart-container">
+    <h2>Budget Usage Meter</h2>
+    <canvas id="donutChart"></canvas>
+    <div id="donutAlert"></div>
+  </div>
+
+  <script>
+    let stackedBarChart, categoryChart, donutChart;
+
+    // Get budget from localStorage, default to 0 if not set
+    function getBudget() {
+      return parseFloat(localStorage.getItem('userBudget')) || 0;
+    }
+
+    // Save budget to localStorage, then re-render charts
+    function saveBudget() {
+      const val = parseFloat(document.getElementById('budgetValue').value);
+      if (isNaN(val) || val < 0) {
+        alert('Enter a valid budget');
+        return;
+      }
+      localStorage.setItem('userBudget', val);
+      renderAllCharts();
+    }
+
+    // Group transactions by interval, splitting into Income and Expenses
+    function groupByInterval(transactions, interval) {
+      const incomeMap = {};
+      const expenseMap = {};
+      transactions.forEach(txn => {
+        const dateObj = new Date(txn.transaction_date);
+        let key;
+        if (interval === 'daily') {
+          key = txn.transaction_date;
+        } else if (interval === 'weekly') {
+          const oneJan = new Date(dateObj.getFullYear(), 0, 1);
+          const week = Math.ceil((((dateObj - oneJan) / 86400000) + oneJan.getDay() + 1) / 7);
+          key = `${dateObj.getFullYear()}-W${week}`;
+        } else { // monthly
+          const m = dateObj.getMonth() + 1;
+          key = `${dateObj.getFullYear()}-${m < 10 ? '0' + m : m}`;
+        }
+        if (!incomeMap[key]) incomeMap[key] = 0;
+        if (!expenseMap[key]) expenseMap[key] = 0;
+        if (txn.type.toUpperCase() === 'CREDIT') {
+          incomeMap[key] += parseFloat(txn.amount);
+        } else {
+          expenseMap[key] += parseFloat(txn.amount);
+        }
+      });
+      const labels = Object.keys({ ...incomeMap, ...expenseMap }).sort();
+      const incomeValues = labels.map(label => incomeMap[label] || 0);
+      const expenseValues = labels.map(label => expenseMap[label] || 0);
+      return { labels, incomeValues, expenseValues };
+    }
+
+    // Group transactions by category for pie chart
+    function groupByCategory(transactions) {
+      const map = {};
+      transactions.forEach(txn => {
+        const cat = txn.category || 'Uncategorized';
+        map[cat] = (map[cat] || 0) + parseFloat(txn.amount);
+      });
+      const labels = Object.keys(map);
+      const values = labels.map(label => map[label]);
+      return { labels, values };
+    }
+
+    // Fetch only the logged-in user's transactions using userId from localStorage
+    async function fetchTransactions() {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        alert("User not logged in!");
+        return [];
+      }
+      const res = await fetch(`http://localhost:5000/api/transactions/${userId}`);
+      const json = await res.json();
+      return json.success ? json.transactions : [];
+    }
+
+    // Render the Stacked Bar Chart (Income & Expenses vs Budget)
+    async function renderStackedBarChart() {
+      const transactions = await fetchTransactions();
+      const view = document.getElementById('viewSelector').value;
+      const budget = getBudget();
+      const { labels, incomeValues, expenseValues } = groupByInterval(transactions, view);
+      const ctx = document.getElementById('stackedBarChart').getContext('2d');
+
+      if (stackedBarChart) stackedBarChart.destroy();
+      stackedBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Income',
+              data: incomeValues,
+              backgroundColor: 'rgba(75, 192, 192, 0.6)'
+            },
+            {
+              label: 'Expenses',
+              data: expenseValues,
+              backgroundColor: 'rgba(255, 99, 132, 0.6)'
+            },
+            {
+              label: 'Budget Limit',
+              data: labels.map(() => budget),
+              type: 'line',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: `${view.charAt(0).toUpperCase() + view.slice(1)} Income & Expenses vs Budget`
+            },
+            legend: { position: 'top' }
+          },
+          scales: {
+            x: { stacked: true },
+            y: { stacked: true, beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    // Render the Category Breakdown Pie Chart
+    async function renderCategoryChart() {
+      const transactions = await fetchTransactions();
+      const { labels, values } = groupByCategory(transactions);
+      const ctx = document.getElementById('categoryChart').getContext('2d');
+      if (categoryChart) categoryChart.destroy();
+      categoryChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: labels.map((_, i) => `hsl(${(i * 360) / labels.length}, 70%, 60%)`)
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: { display: true, text: 'Spending by Category' },
+            legend: { position: 'right' }
+          }
+        }
+      });
+    }
+
+    // Render the Donut Chart: Budget Usage Meter
+    async function renderDonutChart() {
+      const monthlyBudget = getBudget();
+      // For this example, we sum expenses in the current month
+      const transactions = await fetchTransactions();
+      const currentMonth = new Date().toISOString().slice(0, 7); // "YYYY-MM"
+      let totalExpenses = 0;
+      transactions.forEach(txn => {
+        if (txn.transaction_date.startsWith(currentMonth) &&
+            txn.type.toUpperCase() === 'DEBIT') {
+          totalExpenses += parseFloat(txn.amount);
+        }
+      });
+      // Calculate percentage used (clamping to 100)
+      const usedPercentage = monthlyBudget ? Math.min((totalExpenses / monthlyBudget) * 100, 100) : 0;
+      const remainingPercentage = 100 - usedPercentage;
+
+      const ctx = document.getElementById('donutChart').getContext('2d');
+      if (donutChart) donutChart.destroy();
+      donutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Spent', 'Remaining'],
+          datasets: [{
+            data: [usedPercentage, remainingPercentage],
+            backgroundColor: [
+              usedPercentage >= 80 ? 'rgba(255, 99, 132, 0.8)' : 'rgba(75, 192, 192, 0.8)',
+              'rgba(54, 162, 235, 0.8)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: { display: true, text: 'Monthly Budget Usage (%)' },
+            legend: { position: 'bottom' }
+          }
+        }
+      });
+
+      // Display alert if spending exceeds threshold (80%)
+      const alertDiv = document.getElementById('donutAlert');
+      if (usedPercentage >= 80) {
+        alertDiv.innerText = `Warning: You've used ${usedPercentage.toFixed(1)}% of your budget this month.`;
+      } else {
+        alertDiv.innerText = '';
+      }
+    }
+
+    // Render all charts at once
+    function renderAllCharts() {
+      renderStackedBarChart();
+      renderCategoryChart();
+      renderDonutChart();
+    }
+
+    // Update the stacked chart when the view selector changes
+    document.getElementById('viewSelector').addEventListener('change', renderStackedBarChart);
+
+    window.onload = () => {
+      // Pre-fill budget input from localStorage if available
+      document.getElementById('budgetValue').value = getBudget() || '';
+      renderAllCharts();
+    };
+  </script>
+</body>
+</html>

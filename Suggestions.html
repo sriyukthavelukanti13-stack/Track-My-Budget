@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Financial Freedom Resources</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f7fb;
+      color: #2c3e50;
+    }
+
+    a {
+      color: #4a148c;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #0056b3;
+    }
+
+    .title {
+      background: linear-gradient(to right, #20345c, #4b71bd);
+      padding: 50px 20px;
+      text-align: center;
+      color: #fff;
+      animation: fadeInDown 1.2s ease;
+    }
+
+    .title h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    section h2 {
+      text-align: center;
+      font-size: 40px;
+      padding: 40px 20px 20px;
+      color: #333;
+      animation: fadeIn 1s ease forwards;
+      padding-bottom: 50px;
+      padding-top: 40px;
+    }
+    .paperclip-icon {
+  font-size: 30px; /* Increase size */
+  color: #4a148c;
+  position: absolute;
+  top: -30px;
+  left: 5px;
+  padding: 11px;
+  border-radius: 50%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+   }
+
+   .paperclip-icon:hover {
+  transform: rotate(45deg) translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Change background on hover */
+   }
+    /* Grid Layout for Articles */
+    .articles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      padding: 50px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .article-box {
+      background: #e8eaf6;
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      opacity: 0;
+      animation: slideUp 1s forwards;
+    }
+
+    .article-box:nth-child(1) { animation-delay: 0.2s; }
+    .article-box:nth-child(2) { animation-delay: 0.4s; }
+    .article-box:nth-child(3) { animation-delay: 0.6s; }
+    .article-box:nth-child(4) { animation-delay: 0.8s; }
+    .article-box:nth-child(5) { animation-delay: 1s; }
+    .article-box:nth-child(6) { animation-delay: 1.2s; }
+
+    .article-box:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+    }
+
+    .article-box p {
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+
+    /* Updated Videos Section */
+    .videos {
+      padding: 60px 20px;
+      background:#f5f8fc;
+      text-align: center;
+    }
+
+    .videos h2 {
+      font-size: 2.2rem;
+      margin-bottom: 40px;
+      color: black;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .videos-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 20px;
+    }
+
+    .video-box {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeSlideIn 1s forwards;
+    }
+
+    .video-box:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 28px rgba(0,0,0,0.15);
+    }
+
+    .video-box:nth-child(1) { animation-delay: 0.3s; }
+    .video-box:nth-child(2) { animation-delay: 0.6s; }
+    .video-box:nth-child(3) { animation-delay: 0.9s; }
+
+    .video-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 16px;
+      background: #f4f7fb;
+      border-top: 1px solid #dee2e6;
+      color: #4814ac;
+    }
+
+    .video {
+      width: 100%;
+      height: 230px;
+      border: none;
+    }
+    .center-two {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.center-two .video-box {
+  flex: 0 1 40%; /* Or try 35% or 300px for tighter size */
+}
+
+
+
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .title h1 {
+        font-size: 1.6rem;
+      }
+
+      .video {
+        height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="title">
+    <h1>Unlock the Secrets to Financial Freedom with Our Insights</h1>
+  </div>
+
+  <!-- Articles Section -->
+  <section>
+    <h2>Master Budgeting with These Expert Articles</h2>
+    <div class="articles">
+        <head>
+            <!-- Add Font Awesome CDN link -->
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+          </head>
+      <div class="article-box">
+        <i class="fas fa-book-open paperclip-icon"></i>
+        <p>How to Budget Money in 5 Steps</p>
+        <a href="https://www.nerdwallet.com/article/finance/how-to-budget" target="_blank">Click Here</a>
+        <p>Source: NerdWallet</p>
+      </div>
+      <div class="article-box">
+        <i class="fas fa-book-open paperclip-icon"></i>
+        <p>Learn the fundamentals of saving for your future.</p>
+        <a href="https://www.nerdwallet.com/article/finance/how-to-save-money" target="_blank">Click Here</a>
+        <p>Source: NerdWallet</p>
+      </div>
+      <div class="article-box">
+        <i class="fas fa-book-open paperclip-icon"></i>
+        <p>Steps and strategies to help you get out of debt quickly.</p>
+        <a href="https://www.nerdwallet.com/article/finance/how-to-pay-off-debt" target="_blank">Click Here</a>
+        <p>Source: NerdWallet</p>
+      </div>
+      <div class="article-box">
+        <i class="fas fa-book-open paperclip-icon"></i>
+        <p>Investing 101: A Beginner’s Guide to Building Wealth.</p>
+        <a href="https://www.nerdwallet.com/article/investing/investing-for-beginners" target="_blank">Click Here</a>
+        <p>Source: NerdWallet</p>
+      </div>
+      <div class="article-box">
+        <i class="fas fa-book-open paperclip-icon"></i>
+        <p>How to Save for a House: The Ultimate Guide.</p>
+        <a href="https://www.nerdwallet.com/article/finance/how-to-save-for-a-house" target="_blank">Click Here</a>
+        <p>Source: NerdWallet</p>
+      </div>
+      <div class="article-box">
+        <i class="fas fa-book-open paperclip-icon"></i>
+        <p>Creating a Financial Plan: Tips and Tools to Get Started.</p>
+        <a href="https://www.nerdwallet.com/article/finance/how-to-create-a-financial-plan" target="_blank">Click Here</a>
+        <p>Source: NerdWallet</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Updated Videos Section -->
+  <section class="videos">
+    <h2>Master it with Our Easy-to-Follow Video Tutorials!</h2>
+    <!-- Videos Row 1 (3 videos) -->
+<div class="videos-box">
+    <div class="video-box">
+      <iframe class="video" src="https://www.youtube.com/embed/BatI9bKrpJs" allowfullscreen></iframe>
+      <div class="video-title">Budgeting Basics – Step-by-Step Guide</div>
+    </div>
+    <div class="video-box">
+      <iframe class="video" src="https://www.youtube.com/embed/twjgN388-JI" allowfullscreen></iframe>
+      <div class="video-title">Beginner’s Guide to Investing</div>
+    </div>
+    <div class="video-box">
+      <iframe class="video" src="https://www.youtube.com/embed/-Of_WRjDrx0" allowfullscreen></iframe>
+      <div class="video-title">How to Save Smartly – Proven Methods</div>
+    </div>
+  </div>
+ 
+  <!-- Videos Row 2 (2 videos centered) -->
+  <div class="videos-box center-two">
+    <div class="video-box">
+      <iframe class="video" src="https://www.youtube.com/embed/T_776Cwvejs" allowfullscreen></iframe>
+      <div class="video-title">Master the Art of Saving Wisely</div>
+    </div>
+    <div class="video-box">
+      <iframe class="video" src="https://www.youtube.com/embed/58WGkkMej3s" allowfullscreen></iframe>
+      <div class="video-title">Save Smarter, Not Harder – Here's How</div>
+    </div>
+  </div>
+   
+  </section>
+
+</body>
+</html>

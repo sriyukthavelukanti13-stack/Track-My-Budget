@@ -1,0 +1,291 @@
+/* Reset and global settings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header section */
+
+header {
+    background-color: #20345c;
+    padding: 40px 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.logo img {
+    height: 68px;
+    /* Equal height and width to make it a circle */
+    width: 68px;
+    border-radius: 50%;
+    /* Makes it circular */
+    margin-right: 12px;
+    object-fit: cover;
+    /* Ensures the image fits nicely inside the circle */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Optional soft shadow */
+}
+
+.logo {
+    color: white;
+    font-size: 30px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: blue;
+}
+
+.header-buttons .btn {
+    background-color: white;
+    color: #20345c;
+    padding: 10px 20px;
+    text-decoration: none;
+    margin-left: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.header-buttons .btn:hover {
+    background-color: white;
+}
+
+/* About Section */
+.About {
+    text-align: left;
+    padding: 200px 30px;
+    /* padding-left: -10px; */
+   /* padding-top: -10px;*/
+    background-color: white;
+    font-size: 55px;
+    color: white;
+    font-weight: bold;
+    background-image: url("images/background image.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+/* Highlighted Traits Title */
+.Tracking {
+    text-align: center;
+    margin: 40px 0;
+}
+
+/* Feature boxes */
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 equal-width columns */
+    gap: 30px;
+    margin: 0 auto;
+    /* Centers the grid horizontally */
+    padding-top: 70px;
+    /* Keeps the top margin */
+    width: 80%;
+    /* Makes the grid container a certain percentage of the page width */
+    height: auto;
+    /* Adjusts height based on content */
+    justify-items: center;
+    /* Centers grid items horizontally */
+    align-content: center;
+    /* Centers the grid items vertically */
+    box-shadow: 0 2px 4px ash;
+    opacity: 0;
+    transform: translateX(-50px);
+    animation: fadeSlideRight 1.5s ease forwards;
+    animation-delay: 0.5s;
+}
+
+@keyframes fadeSlideRight {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Adjust for responsiveness: stack the grid items in 1 column on small screens */
+@media (max-width: 768px) {
+    .features {
+        grid-template-columns: 1fr;
+        /* Stack boxes in one column on smaller screens */
+        gap: 20px;
+        padding: 0 20px;
+    }
+}
+
+.rectangle-box {
+    width: 100%;
+    /* Makes the box take up the full width of the grid column */
+    height: auto;
+    /* Height of the box */
+    border-radius: 35px;
+    padding: 30px;
+    /* Padding inside the box */
+    background-color: #f4f4f4;
+    /* Background color */
+    box-shadow: 20px 4px 10px rgba(0, 0, 0, 0.1);
+    /* Optional: Adds a shadow effect */
+}
+
+/* Style for the text inside the box */
+.box-content {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    color: black;
+    /* Text color */
+}
+
+/* Style for heading inside the box */
+.box-content h3 {
+    font-size: 20px;
+    color: #3b8de4;
+    font-style: italic;
+    font-family: open sans-serif;
+}
+
+.bank-image {
+    width: 30px;
+    height: 20px;
+}
+
+/* Container for the navigation links */
+.container {
+    display: flex;
+    justify-content: center;
+    /* Center the nav items horizontally */
+    gap: 20px;
+    /* Adds space between the nav links */
+    width: 100%;
+    /* Ensures nav-container spans full width */
+}
+
+.Steps {
+    background-color: #ffffff;
+    padding: 60px 20px;
+}
+
+.Steps .process {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.Steps h2 {
+    font-size: 36px;
+    color: #20345c;
+}
+
+.step-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.step-row.reverse {
+    flex-direction: row-reverse;
+    /* This flips the content order */
+}
+
+.Stepsimage {
+    flex: 1;
+    max-width: 300px;
+    margin-right: 20px;
+    /* Space between image and text */
+}
+
+.Stepsimage img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.Rectangle {
+    flex: 1;
+    max-width: 600px;
+    padding: 20px;
+    margin-left: 20px;
+    /* Space between image and text */
+}
+
+.Rectangle .box {
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.Rectangle h3 {
+    color: #20345c;
+    margin-bottom: 15px;
+}
+
+.Rectangle ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.Rectangle li {
+    margin-bottom: 10px;
+}
+
+
+/* Footer */
+.Footer {
+    margin-top: 60px;
+}
+
+footer {
+    background-color: #20345c;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+}
+
+footer li {
+    display: inline-block;
+    margin: 10px 20px;
+}

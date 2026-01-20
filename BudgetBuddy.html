@@ -1,0 +1,434 @@
+<script>
+  // This code runs immediately, protecting the page from unauthenticated access.
+  if (!localStorage.getItem('userId')) {
+    // Option 1: Simply redirect to login page
+    window.location.href = "login.html";
+    
+    // Option 2 (if you prefer a modal approach):
+    // displayLoginModal();
+  }
+</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BudgetBuddy - Cash Transactions</title>
+  <style>
+    /* Your existing styles */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      height: 100vh;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      width: 80%;
+      max-width: 800px;
+      margin-top: 40px;
+    }
+    .header {
+  width: 100%;
+  padding: 35px 0;
+  text-align: center;
+  background: linear-gradient(to right, #20345c, #4b71bd);
+  color: white;
+  padding-bottom: 50px;
+}
+.header h1 {
+  margin: 0;
+}
+
+    .manual, .transactions {
+      background: white;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      width: 100%;
+      padding-top: 30px;
+      padding-bottom: 20px;
+    }
+    .manual h2, .transactions h3 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      color: white;
+    }
+    /* Center the “Save Transactions” button */
+  .transactions > button.add-btn {
+  display: block;
+  margin: 20px auto;   /* 20px top/bottom, auto left/right */
+  width: fit-content;  /* shrink to its contents */
+  }
+
+    .add-btn, .reset-btn {
+      background-color: #444d94;
+    }
+    button:hover {
+      opacity: 0.8;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #283593;
+      color: white;
+    }
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 25px;
+    }
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+    /* Hide custom category input */
+    #customCategory {
+      display: none;
+    }
+    /* Save message styling */
+    #saveMessage {
+      margin-top: 15px;
+      font-size: 18px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    #saveMessage button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #saveMessage button:hover {
+      background-color: #218838;
+    }
+    /* Donut background circles */
+.donut {
+    position: absolute;
+    border: 10px solid rgba(58, 87, 145, 0.2);
+    border-radius: 50%;
+    z-index: -1; /* Behind everything */
+    animation: float 20s linear infinite alternate;
+}
+
+.donut1 {
+    width: 250px;
+    height: 250px;
+    bottom: -10%;
+    left: 10%;
+}
+
+.donut2 {
+    width: 300px;
+    height: 300px;
+    bottom: 10%;
+    right: 5%;
+}
+  </style>
+</head>
+<body>
+  <!-- Donut background shapes -->
+  <div class="donut donut1"></div>
+  <div class="donut donut2"></div>
+  <div class="header">
+    <h1>BudgetBuddy: A Smarter Way to Monitor Your Money</h1>
+  </div>
+  <div class="container">
+    <!-- Manual Entry Section -->
+    <div class="manual">
+      <h2 style="font-size: 30px;">Cash Transactions</h2>
+      <br><label for="amount">Enter Amount &#8377;</label><br>
+      <input type="number" id="amount" placeholder="Enter amount (&#8377)" required /><br>
+      <br><label for="category">Category</label>
+      <select id="category" onchange="toggleCustomCategory()">
+        <option value="Food">Food</option>
+        <option value="Travel">Travel</option>
+        <option value="Groceries">Groceries</option>
+        <option value="Fuel">Fuel</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Rent">Rent</option>
+        <option value="Hospital">Hospital</option>
+        <option value="Vacation">Vacation</option>
+        <option value="custom">Add Custom</option>
+      </select>
+      <input type="text" id="customCategory" placeholder="Enter custom category" /><br>
+      <br><label for="transactionType">Type of Transaction</label>
+      <select id="transactionType">
+        <option value="CREDIT">Credit</option>
+        <option value="DEBIT">Debit</option>
+      </select><br>
+     <br> <label for="date">Date</label>
+      <input type="date" id="date" required />
+      <div class="btn-group">
+        <button class="add-btn" onclick="addExpense()" style="margin-top: 20px;margin-bottom: 20px;">Add Expense</button>
+        <button class="reset-btn" onclick="resetForm()" style="margin-top: 20px;margin-bottom: 20px;">Reset</button>
+      </div>
+    </div>
+
+    <!-- Transaction Records -->
+    <div class="transactions">
+      <h3>Transaction Records</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Type - Amount</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="transactionTable">
+          <!-- Transactions will be added here -->
+        </tbody>
+      </table>
+      <button class="add-btn" onclick="saveTransactions()" style="text-align: center; padding-top: 15px;padding-bottom: 15px;">Save Transactions</button>
+      <div id="saveMessage"></div>
+    </div>
+
+    <!-- PDF Upload Section -->
+    <div class="transactions">
+      <h3>Upload Bank Statement (PDF)</h3>
+      <input type="file" id="pdfFile" accept="application/pdf" />
+      <button class="add-btn" onclick="uploadPDF()">Upload & Extract</button>
+      <div id="pdfTextOutput"></div>
+    </div>
+  </div>
+
+  <script>
+    function toggleCustomCategory() {
+      const categoryDropdown = document.getElementById("category");
+      const customCategoryInput = document.getElementById("customCategory");
+      if (categoryDropdown.value === "custom") {
+        customCategoryInput.style.display = "block";
+        customCategoryInput.focus();
+      } else {
+        customCategoryInput.style.display = "none";
+        customCategoryInput.value = "";
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("amount").value = "";
+      document.getElementById("category").value = "Food";
+      document.getElementById("transactionType").value = "CREDIT";
+      document.getElementById("date").value = "";
+      document.getElementById("customCategory").style.display = "none";
+      document.getElementById("customCategory").value = "";
+    }
+
+    function addExpense() {
+      const amount = document.getElementById("amount").value;
+      const categoryDropdown = document.getElementById("category");
+      let category = categoryDropdown.value;
+      const customCategory = document.getElementById("customCategory").value.trim();
+      const txnType = document.getElementById("transactionType").value;
+      const date = document.getElementById("date").value;
+
+      if (!amount || !date) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      if (category === "custom") {
+        if (!customCategory) {
+          alert("Please enter a custom category.");
+          return;
+        }
+        category = customCategory;
+        const newOption = document.createElement("option");
+        newOption.value = customCategory;
+        newOption.textContent = customCategory;
+        categoryDropdown.insertBefore(newOption, categoryDropdown.lastElementChild);
+        categoryDropdown.value = customCategory;
+      }
+
+      const table = document.getElementById("transactionTable");
+      const newRow = table.insertRow();
+      newRow.innerHTML = `
+        <td>${date}</td>
+        <td>${category}</td>
+        <td>${txnType} - ₹${amount}</td>
+        <td>N/A</td>
+        <td><button class="delete-btn" onclick="deleteExpense(this)">Delete</button></td>
+      `;
+      resetForm();
+    }
+
+    function deleteExpense(button) {
+      const row = button.closest("tr");
+      row.parentNode.removeChild(row);
+    }
+
+    async function uploadPDF() {
+      const fileInput = document.getElementById("pdfFile");
+      const file = fileInput.files[0];
+      if (!file) {
+        alert("Please select a PDF file to upload.");
+        return;
+      }
+      const formData = new FormData();
+      formData.append("pdf", file);
+      try {
+        const response = await fetch("http://localhost:5000/upload", {
+          method: "POST",
+          body: formData
+        });
+        const data = await response.json();
+        console.log("Server Response:", data);
+        if (data.success) {
+          data.transactions.forEach((txn, index) => {
+            const row = document.getElementById("transactionTable").insertRow();
+            row.innerHTML = `
+              <td>${txn.date} ${txn.time}</td>
+              <td>
+                <select onchange="updateCategory(this, ${index})">
+                  <option value="">Select Category</option>
+                  <option value="Food">Food</option>
+                  <option value="Travel">Travel</option>
+                  <option value="Groceries">Groceries</option>
+                  <option value="Fuel">Fuel</option>
+                  <option value="Shopping">Shopping</option>
+                  <option value="Rent">Rent</option>
+                  <option value="Hospital">Hospital</option>
+                  <option value="Vacation">Vacation</option>
+                  <option value="custom">Add Custom</option>
+                </select>
+                <input type="text" id="customCategory${index}" style="display:none;" placeholder="Enter custom category">
+              </td>
+              <td>${txn.type} - ₹${txn.amount}</td>
+              <td>${txn.description}</td>
+              <td><button class="delete-btn" onclick="deleteExpense(this)">Delete</button></td>
+            `;
+          });
+          alert(`Extracted ${data.transactions.length} transactions successfully.`);
+        } else {
+          alert("Failed to extract transactions.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while uploading the PDF.");
+      }
+    }
+
+    function updateCategory(selectElement, index) {
+      const customCategoryInput = document.getElementById(`customCategory${index}`);
+      if (selectElement.value === "custom") {
+        customCategoryInput.style.display = "block";
+        customCategoryInput.focus();
+      } else {
+        customCategoryInput.style.display = "none";
+        customCategoryInput.value = "";
+      }
+    }
+
+    function saveTransactions() {
+      const tbody = document.getElementById("transactionTable");
+      const rows = tbody.getElementsByTagName("tr");
+      const user_id = localStorage.getItem("userId");
+      const saveMsg = document.getElementById("saveMessage");
+      saveMsg.innerText = "";
+
+      if (!user_id) {
+        alert("User not logged in!");
+        return;
+      }
+
+      const transactions = [];
+      for (let row of rows) {
+        if (row.cells.length < 4) continue;
+        const date = row.cells[0].innerText.trim();
+        let category = "";
+        const select = row.cells[1].querySelector("select");
+        if (select) {
+          const input = row.cells[1].querySelector("input[type='text']");
+          category = (select.value === "custom" && input && input.value.trim()) ? input.value.trim() : select.value.trim();
+        } else {
+          category = row.cells[1].innerText.trim();
+        }
+        const [txnType, amountStr] = row.cells[2].innerText.trim().split(" - ");
+        const amount = parseFloat(amountStr.replace("₹", "").trim());
+        const description = row.cells[3].innerText.trim() || "N/A";
+        if (!date || !txnType || isNaN(amount)) continue;
+        transactions.push({ date, category, type: txnType.trim(), amount, description });
+      }
+
+      if (transactions.length === 0) {
+        saveMsg.style.color = "red";
+        saveMsg.innerText = "No transactions to save.";
+        return;
+      }
+
+      fetch("http://localhost:5000/api/transactions/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id, transactions }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            saveMsg.style.color = "green";
+            saveMsg.innerHTML = `
+              Transactions saved successfully!<br>
+              <button onclick="redirectToGraph()">Go to Graph</button>
+            `;
+            // Optional: Clear the table after saving
+            // document.getElementById("transactionTable").innerHTML = "";
+          } else {
+            saveMsg.style.color = "red";
+            saveMsg.innerText = "Failed to save transactions: " + data.message;
+          }
+        })
+        .catch(err => {
+          console.error("Error saving transactions:", err);
+          saveMsg.style.color = "red";
+          saveMsg.innerText = "Error saving transactions.";
+        });
+    }
+
+    function redirectToGraph() {
+      window.location.href = "Graph.html";
+    }
+  </script>
+</body>
+</html>

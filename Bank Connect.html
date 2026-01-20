@@ -1,0 +1,279 @@
+/* Global reset for margin, padding, and box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6; /* Light background color */
+}
+
+/* Header section (contains the heading and navigation) */
+header {
+    display: flex;
+    flex-direction: column; /* Stack the header elements in a column */
+    align-items: center; /* Center header content horizontally */
+    padding: 30px 40px; /* Adds padding around the header */
+    background-color: #20345c; /* Dark background color for header */
+    color: white; /* White text color */
+    text-align: center;
+    height:150px; /* Ensure heading text is centered */
+}
+
+/* Heading styling */
+h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    letter-spacing: 1px;
+    margin-bottom: 20px; /* Space below heading */
+}
+
+h2 {
+    font-size: 45px;
+    font-weight: bold;
+    color: #20345c;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    text-align: center !important;
+    margin-top: 65px;
+}
+
+.About {
+    text-align: center;
+    font-size: 50px;
+    font-weight: bold;
+    color: #20345c;
+    letter-spacing: 1px;
+    margin-bottom: 150px;
+    margin-top: 150px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+/* Features Grid */
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns */
+    gap: 30px;
+    margin: 0 auto; /* Centers the grid horizontally */
+    padding-top: 70px; /* Keeps the top margin */
+    width: 80%; /* Makes the grid container a certain percentage of the page width */
+    height: auto; /* Adjusts height based on content */
+    justify-items: center; /* Centers grid items horizontally */
+    align-content: center; /* Centers the grid items vertically */
+    box-shadow: 0 2px 4px ash;
+    opacity: 0;
+    transform: translateX(-50px);
+    animation: fadeSlideRight 1.5s ease forwards;
+    animation-delay: 0.5s;
+}
+@keyframes fadeSlideRight {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+/* Adjust for responsiveness: stack the grid items in 1 column on small screens */
+@media (max-width: 768px) {
+    .features {
+        grid-template-columns: 1fr; /* Stack boxes in one column on smaller screens */
+        gap:20px;
+        padding: 0 20px;
+    }
+}
+
+/* Style for each rectangular box */
+.rectangle-box {
+    width: 100%; /* Makes the box take up the full width of the grid column */
+    height: auto; /* Height of the box */
+    border-radius: 35px;
+    padding: 30px; /* Padding inside the box */
+    background-color: #f4f4f4; /* Background color */
+    box-shadow: 20px 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow effect */
+}
+
+/* Style for the text inside the box */
+.box-content {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    color: black; /* Text color */
+}
+
+/* Style for heading inside the box */
+.box-content h3 {
+    font-size: 20px;
+    color:#20345c;
+    font-style: italic;
+    font-family: open sans-serif;
+}
+.bank-image{
+    width: 30px;
+    height:20px;
+}
+
+/* Container for the navigation links */
+.container {
+    display: flex;
+    justify-content: center; /* Center the nav items horizontally */
+    gap: 20px; /* Adds space between the nav links */
+    width: 100%; /* Ensures nav-container spans full width */
+}
+
+/* Style for nav links */
+nav a {
+    text-decoration: none; /* Removes default underline */
+    color: white; /* White text color */
+    font-size: 16px; /* Font size for links */
+    font-weight: 500;
+    padding: 10px 20px; /* Padding inside the links */
+    border-radius: 30px; /* Rounded corners for the links */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect for links */
+nav a:hover {
+    background-color: #3b8de4; /* Blue background on hover */
+    color: white; /* Keep text white */
+}
+
+/* Make the layout responsive on smaller screens */
+@media (max-width: 768px) {
+    header {
+        padding: 20px 20px; /* Adjust padding for smaller screens */
+    }
+
+    /* Adjust navigation links when screen width is small */
+    .nav-container {
+        flex-direction: row; /* Ensure nav items stay in a row */
+        justify-content: center; /* Keep nav items centered */
+        gap: 15px; /* Adjust space between links */
+    }
+
+    nav a {
+        font-size: 18px; /* Larger text size for better readability on mobile */
+        padding: 12px 25px; /* Increase padding for touch target accessibility */
+    }
+
+    /* Ensure that features display in one column on small screens */
+    .features {
+        grid-template-columns: 1fr; /* Stack boxes in one column on smaller screens */
+    }
+}
+
+/* General styling for the Steps section */
+.Steps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    background-color: #f9f9f9;
+    text-align: center;
+    ul {
+    list-style-type: none; /* Removes the default bullets */
+    padding: 0; /* Removes default padding */
+    }
+
+    /* Adds custom emoji bullets using the ::before pseudo-element */
+    li::before {
+        content: "👉"; /* You can replace this with any emoji you like */
+        font-size: 20px; /* Adjust the size of the emoji bullet */
+        margin-right: 10px;
+        color :  #20345c; /* Adds space between the emoji and the list item text */
+    }
+}
+
+/* Steps heading */
+.process h2 {
+    font-size: 2.5rem;
+    color:#20345c;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+/* Container for the steps */
+.Steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 80px; /* Increased space between steps */
+    align-items: center; /* Center align steps */
+    width: 80%;
+}
+
+/* Styling for each step box */
+.Rectangle {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Increased box shadow */
+    padding: 30px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    max-width: 700px;
+    width: 90%;
+    text-align: center;
+    opacity: 1; /* Ensure it is fully visible */
+    transform: translateX(0); /* Keep in position */
+    margin-bottom: 40px;
+}
+
+/* Alternating positions for the steps */
+.Rectangle:nth-child(odd) {
+    align-self: flex-start;
+    flex-direction: row-reverse; /* Move left */
+}
+
+.Rectangle:nth-child(even) {
+    align-self: flex-end; /* Move right */
+}
+
+.Rectangle:hover {
+    transform: none; /* No change in position on hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Same shadow, no hover effect */
+}
+
+/* Text styling inside boxes */
+.Rectangle h3 {
+    font-size: 1.8rem;
+    color: #007bff;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.Rectangle p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.6;
+    position: relative;
+}
+
+/* Footer container */
+html body footer {
+    width:auto;
+    max-width: 1900px;
+    height: 400px;
+    margin-top: 80px;
+    font-size: 20px;
+    transition: none !important; /* Remove any transitions applied to the footer */
+}
+
+/* Remove transition for any links in the footer */
+html body footer nav a {
+    transition: none !important; /* Prevent any transition effect on nav links inside footer */
+}
+
+.box {
+    flex: 1; /* Allows text content to take available space */
+    text-align: left;
+    padding: 20px;
+}
+
+.Rectangle img {
+    width: 200px; /* Adjust size */
+    height: auto;
+    border-radius: 10px;
+    margin-left: 20px; /* Space between text and image */
+}
